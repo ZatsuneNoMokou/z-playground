@@ -1,0 +1,13 @@
+{
+	"extends": "./tsconfig.json",
+	"include": [
+		"public/js/**/*.ts"
+	],
+	"exclude": [
+	],
+	"compilerOptions":{
+		"outDir": "public/js",
+		"module": "ESNext",
+		"target": "ES2023"
+	}
+}

@@ -1,0 +1,19 @@
+{
+	"compilerOptions":{
+		"alwaysStrict": true,
+		"declaration": false,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"experimentalDecorators": false,
+		"forceConsistentCasingInFileNames": true,
+		"newLine": "LF",
+		"noImplicitAny": true,
+		"noImplicitReturns": true,
+		"pretty": true,
+		"skipLibCheck": true,
+		"sourceMap": true,
+		"strictNullChecks": true,
+		"module": "NodeNext",
+		"target": "ES2024"
+	}
+}

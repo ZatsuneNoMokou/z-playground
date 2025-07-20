@@ -1,0 +1,14 @@
+{
+	"extends": "./tsconfig.json",
+	"include": [
+		"src/**/*.ts"
+	],
+	"exclude": [
+	],
+	"compilerOptions":{
+		"outDir": "src",
+		"module": "NodeNext",
+		"moduleResolution": "node16",
+		"target": "ES2024"
+	}
+}
