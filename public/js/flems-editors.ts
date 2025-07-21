@@ -2,7 +2,7 @@ import {IEditorData, IFlemOptions, FlemInstance} from "./bo/flems.js";
 
 
 
-declare var Flems : (target:HTMLElement, opts: IFlemOptions) => FlemInstance;
+declare var Flems : (target:HTMLElement, opts: IFlemOptions, runtimeUrl?:string) => FlemInstance;
 let flemInstance : FlemInstance|null = null;
 
 
@@ -64,7 +64,7 @@ async function init(data: IEditorData=defaultEditors) {
 				}
 			})
 	};
-	flemInstance = Flems(document.body, opts);
+	flemInstance = Flems(document.body, opts, '/flems/runtime.html');
 
 	flemInstance.onchange(function (instance) {
 		editorData = {

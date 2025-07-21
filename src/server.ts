@@ -8,6 +8,7 @@ import {EditorData} from "./bo/flems.js";
 import {getRequestAddress} from "./getRequestAddress.js";
 import * as process from "node:process";
 import * as crypto from "node:crypto";
+import * as os from "node:os";
 
 const __dirname = import.meta.dirname;
 
@@ -201,11 +202,17 @@ server.post<{ Querystring: queryWithId, Reply: saveReply|error }>('/save', {
 
 
 
-server.get('/flems/flems.html', async (_, reply) => {
+function loadFlems(flemFile:'runtime.html'|'flems.js') {
+	return fs.readFileSync(path.normalize(import.meta.resolve(`flems/dist/${flemFile}`)
+		.replace(os.platform() === 'win32' ? /file:\/{3}/ : /file:\/{2}/, '')), 'utf8');
+}
+server.get<{ Querystring: {type:string} }>('/flems/flems.js', async (_, reply) => {
+	return reply.type('text/javascript')
+		.send(loadFlems('flems.js'))
+});
+server.get<{ Querystring: {type:string} }>('/flems/runtime.html', async (_, reply) => {
 	return reply.type('text/html')
-		.send(
-			fs.readFileSync(path.normalize(import.meta.resolve('flems/dist/flems.html').replace(/file:\/{3}/, '')), 'utf8')
-		)
+		.send(loadFlems('runtime.html'))
 });
 
 
