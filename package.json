@@ -2,6 +2,9 @@
   "name": "z-flems",
   "packageManager": "yarn@4.9.2",
   "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "clean": "find src/ public/js/ -type f -and \\( -name '\\*.js' -o -name '\\*.d.ts' -o -name '\\*.map' \\) -delete",
     "build:node": "yarn tsc -p tsconfig.node.json",
