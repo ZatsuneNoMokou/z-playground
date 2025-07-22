@@ -1,29 +1,31 @@
 export interface IEditorData {
 	files: IFlemOptions['files'];
 	links: string[];
+	selected?: string;
 }
 
 export type FlemInstance = {
-	files: IFlemOptions['files']
-	links: IFlemOptions['links']
-
 	reload(): void
 	focus(): void
 	redraw(): void
 
-	onchange(fn: (instance: FlemInstance) => void): void
-	onload(fn: (instance: FlemInstance) => void): void
-	onloaded(fn: (instance: FlemInstance) => void): void
+	set(data:IFlemOptions): void
+
+	onchange(fn: (state: IFlemOptions) => void): void
+	onload(fn: () => void): void
+	onloaded(fn: (state: IFlemOptions) => void): void
 }
 
+export interface IFlemOptions_file {
+	name: string,
+	content: string
+	compiler?: string | Function
+	selections?: string
+	doc?: any
+	type?: string
+}
 export interface IFlemOptions {
-	files: {
-		name: string,
-		content: string
-		compiler?: string | Function
-		selections?: string
-		doc?: any
-	}[],
+	files: IFlemOptions_file[],
 	links: {
 		name: string,
 		type: string,
