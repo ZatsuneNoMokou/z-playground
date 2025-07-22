@@ -1,4 +1,4 @@
-import {IEditorData, IFlemOptions, FlemInstance} from "./bo/flems.js";
+import {IEditorData, IFlemOptions, FlemInstance, IFlemOptions_file} from "./bo/flems.js";
 
 
 
@@ -26,23 +26,9 @@ const defaultEditors: IEditorData = {
 	],
 	links: [],
 }
-async function init(data: IEditorData=defaultEditors) {
-	const search = new URLSearchParams(window.location.search),
-		id = search.get('id');
-	if (id !== null) {
-		const idData = await (await fetch(`/data/${id}.json`)).json();
-		if (idData && typeof idData === 'object') {
-			data = editorData = {
-				files: Array.isArray(idData.files) ? idData.files : defaultEditors.files,
-				links: Array.isArray(idData.links) ? idData.links : defaultEditors.links,
-			};
-		} else {
-			throw new Error(`Could not find valid data from ${JSON.stringify(id)}`);
-		}
-	}
 
-	console.info('init');
-	let opts : IFlemOptions = {
+function optsToFlemState(data: IEditorData): IFlemOptions {
+	return {
 		theme: 'material',
 
 		fileTabs: true,
@@ -55,7 +41,7 @@ async function init(data: IEditorData=defaultEditors) {
 		selected: data.files.find(file => {
 			return file.name.endsWith('.js')
 		})?.name,
-		links: data.links
+		links: (data.links ?? [])
 			.map(lib => {
 				return {
 					name: lib,
@@ -64,7 +50,35 @@ async function init(data: IEditorData=defaultEditors) {
 				}
 			})
 	};
-	flemInstance = Flems(document.body, opts, '/flems/runtime.html');
+}
+
+async function init(data: IEditorData=defaultEditors) {
+	const search = new URLSearchParams(window.location.search),
+		id = search.get('id');
+	if (id !== null) {
+		const idData = await (await fetch(`/data/${id}.json`)).json();
+		if (idData && typeof idData === 'object') {
+			data = editorData = {
+				files: Array.isArray(idData.files) ? idData.files : defaultEditors.files,
+				links: Array.isArray(idData.links) ? idData.links : defaultEditors.links,
+				selected: idData.selected,
+			};
+			editorData.files = editorData.files ?? defaultEditors.files;
+			editorData.links = editorData.links ?? defaultEditors.links;
+		} else {
+			throw new Error(`Could not find valid data from ${JSON.stringify(id)}`);
+		}
+	}
+	if (!editorData) {
+		editorData = {
+			files: data.files,
+			links: data.links,
+			selected: data.selected,
+		};
+	}
+
+	console.info('init');
+	flemInstance = Flems(document.body, optsToFlemState(data), '/flems/runtime.html');
 
 	flemInstance.onchange(function (instance) {
 		editorData = {
@@ -77,6 +91,98 @@ async function init(data: IEditorData=defaultEditors) {
 
 init()
 	.catch(console.error);
+
+
+
+function removeFile(fileName: string) {
+	// noinspection SuspiciousTypeOfGuard
+	if (typeof fileName !== 'string' || !fileName) {
+		throw new Error('fileName must be a string');
+	}
+	if (!flemInstance) {
+		throw new Error('flemInstance not found');
+	}
+
+	const fileIndex = editorData.files.findIndex(file => file.name === fileName);
+	if (fileIndex === -1) throw new Error('fileName not found');
+	editorData.files.splice(fileIndex, 1);
+	flemInstance.set(optsToFlemState(editorData));
+}
+function addFile(file: IFlemOptions_file) {
+	// noinspection SuspiciousTypeOfGuard
+	if (typeof file !== 'object' || !file) {
+		throw new Error('Invalid file');
+	}
+	if (!flemInstance) {
+		throw new Error('flemInstance not found');
+	}
+
+	// noinspection SuspiciousTypeOfGuard
+	if (typeof file.name !== 'string') {
+		throw new Error('File name must be a string');
+	}
+	// noinspection SuspiciousTypeOfGuard
+	if (file.type !== undefined && typeof file.type !== 'string') {
+		throw new Error('File type must be a string');
+	}
+	// noinspection SuspiciousTypeOfGuard
+	if (typeof file.content !== 'string') {
+		throw new Error('File content must be a string');
+	}
+	// noinspection SuspiciousTypeOfGuard
+	if (file.selections !== undefined && typeof file.selections !== 'string') {
+		throw new Error('File selections must be a string');
+	}
+	// noinspection SuspiciousTypeOfGuard
+	if (typeof file.compiler !== 'string' && typeof file.compiler !== 'function') {
+		throw new Error('File compiler must be a string or a function');
+	}
+	editorData.files.push({
+		name: file.name,
+		type: file.type,
+		content: file.content,
+		selections: file.selections,
+		doc: file.doc,
+		compiler: file.compiler ? file.compiler : undefined,
+	});
+	flemInstance.set(optsToFlemState(editorData));
+}
+function addLib(libName:string) {
+	// noinspection SuspiciousTypeOfGuard
+	if (typeof libName !== 'string' || !libName) {
+		throw new Error('libName must be a string');
+	}
+	if (!flemInstance) {
+		throw new Error('flemInstance not found');
+	}
+
+	editorData.links.push(libName);
+	flemInstance.set(optsToFlemState(editorData));
+}
+function removeLib(libName:string) {
+	// noinspection SuspiciousTypeOfGuard
+	if (typeof libName !== 'string' || !libName) {
+		throw new Error('libName must be a string');
+	}
+	if (!flemInstance) {
+		throw new Error('flemInstance not found');
+	}
+
+	const libIndex = editorData.links.indexOf(libName);
+	if (libIndex === -1) throw new Error('libName not found');
+	editorData.links.splice(libIndex, 1);
+	flemInstance.set(optsToFlemState(editorData));
+}
+// noinspection JSUnusedGlobalSymbols
+const zPlayground = {
+	addFile,
+	removeFile,
+	addLib,
+	removeLib,
+};
+// @ts-ignore
+self.zPlayground = zPlayground;
+
 
 
 document.addEventListener('keydown', function(event) {
