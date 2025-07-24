@@ -7,5 +7,19 @@
 <!--	<script src="https://flems.io/flems.html" type="text/javascript" charset="utf-8"></script>-->
 	<script src="js/flems-editors.js" type="module"></script>
 </head>
-<body></body>
+<body>
+
+<section id="flems"></section>
+
+<button class="popover-open" popovertarget="z-popover"></button>
+<div id="z-popover" popover>
+	<button popovertarget="z-popover" popovertargetaction="hide"></button>
+	<label for="z-popover-input">Input :</label>
+	<input type="text" id="z-popover-input" class="z-popover-input" />
+
+	<button id="add-file">Add file</button>
+	<button id="add-lib">Add lib</button>
+</div>
+
+</body>
 </html>

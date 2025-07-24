@@ -13,15 +13,15 @@ const defaultEditors: IEditorData = {
 	files: [
 		{
 			name: 'app.html',
-			content: '<h3>No need to write &lt;body&gt; &lt;/body&gt;</h3>'
+			content: '<h3>No need to write &lt;body&gt; &lt;/body&gt;</h3>',
 		},
 		{
 			name: 'app.css',
-			content: 'body {\n\tpadding: 0;\n}\nbody.red {\n\tbackground: rgba(200,0,0,0.2);\n}'
+			content: 'body {\n\tpadding: 0;\n}\nbody.red {\n\tbackground: rgba(200,0,0,0.2);\n}',
 		},
 		{
 			name: 'app.js',
-			content: 'console.dir(location.href);'
+			content: 'console.dir(location.href);',
 		},
 	],
 	links: [],
@@ -78,7 +78,9 @@ async function init(data: IEditorData=defaultEditors) {
 	}
 
 	console.info('init');
-	flemInstance = Flems(document.body, optsToFlemState(data), '/flems/runtime.html');
+	const $flems = document.querySelector<HTMLElement>('#flems');
+	if (!$flems) throw new Error(`Could not find flems section`);
+	flemInstance = Flems($flems, optsToFlemState(data), '/flems/runtime.html');
 
 	flemInstance.onchange(function (instance) {
 		editorData = {
@@ -134,7 +136,7 @@ function addFile(file: IFlemOptions_file) {
 		throw new Error('File selections must be a string');
 	}
 	// noinspection SuspiciousTypeOfGuard
-	if (typeof file.compiler !== 'string' && typeof file.compiler !== 'function') {
+	if (file.compiler !== undefined && typeof file.compiler !== 'string' && typeof file.compiler !== 'function') {
 		throw new Error('File compiler must be a string or a function');
 	}
 	editorData.files.push({
@@ -184,6 +186,35 @@ const zPlayground = {
 self.zPlayground = zPlayground;
 
 
+
+document.addEventListener('click', function(event) {
+	const el = (<HTMLElement|null>event.target)?.closest('#add-file,#add-lib');
+	if (!el) return;
+
+	const $input = document.querySelector<HTMLInputElement>('input#z-popover-input');
+	if (!$input) throw new Error(`Could not find the input element`);
+
+	if (!$input.value) {
+		console.warn('Input is required');
+		return;
+	}
+
+	switch (el.id) {
+		case 'add-file':
+			addFile({
+				name: $input.value,
+				content: '',
+			});
+			$input.value = '';
+			break;
+		case 'add-lib':
+			addLib($input.value);
+			$input.value = '';
+			break;
+		default:
+			throw new Error(`Unsupported input id ${el.id}`);
+	}
+});
 
 document.addEventListener('keydown', function(event) {
 	// Check if Ctrl (or Cmd on Mac) key is pressed and S key is pressed
