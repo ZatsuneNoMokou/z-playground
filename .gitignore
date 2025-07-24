@@ -1,7 +1,8 @@
 /src/**/*.js
 /src/**/*.map
 /public/js/**/*.js
-/public/js/**/*.map
+/public/css/**/*.css
+/public/**/*.map
 
 ### Linux template
 *~
