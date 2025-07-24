@@ -1,0 +1,52 @@
+.flems .tabs
+	padding-left: 46px
+
+.popover-open[popovertarget="z-popover"]
+	border: none
+	cursor: pointer
+	display: block
+	height: 40px
+	left: 0
+	overflow: hidden
+	position: fixed
+	top: 0
+	width: 45px
+	z-index: 42
+
+	&::before
+		content: "⚙️"
+		font-size: 32px
+		line-height: 1
+
+[popover]
+	background-color: #fff
+	border-radius: 5px
+	color: #333
+	flex-direction: column
+	left: 50%
+	min-height: 300px
+	min-width: 300px
+	padding: 20px 15px 15px
+	position: fixed
+	top: 50%
+	transform: translate(-50%, -50%)
+	transition: opacity 0.2s
+
+	&:popover-open
+		display: flex
+
+[popovertargetaction="hide"]
+	background: transparent
+	border: none
+	cursor: pointer
+	position: absolute
+	right: 5px
+	top: 5px
+
+	&::before
+		content: "\274C"
+		font-size: 12px
+		line-height: 1
+
+[popover]::backdrop
+	background-color: rgba(0, 0, 0, 0.6)
