@@ -1,12 +1,13 @@
 {
 	"extends": "./tsconfig.json",
 	"include": [
-		"src/**/*.ts"
+		"src/**/*.ts",
+		"convertAvif.ts"
 	],
 	"exclude": [
 	],
 	"compilerOptions":{
-		"outDir": "src",
+		"outDir": ".",
 		"module": "NodeNext",
 		"moduleResolution": "node16",
 		"target": "ES2024"

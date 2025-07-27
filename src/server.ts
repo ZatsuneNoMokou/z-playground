@@ -67,7 +67,7 @@ server.register(fastifyStatic, {
 	root: path.normalize(`${__dirname}/../public`),
 	allowedPath(pathName) {
 		const extension = path.extname(pathName);
-		return /^\.(?:css|js|png|jpe?g|svg|web[pm]|woff2)$/i.test(extension) && !pathName.split(/[\/\\]/).some(part => part.startsWith('.'));
+		return /^\.(?:css|js|avif|png|jpe?g|svg|web[pm]|woff2)$/i.test(extension) && !pathName.split(/[\/\\]/).some(part => part.startsWith('.'));
 	},
 	prefix: '/',
 });

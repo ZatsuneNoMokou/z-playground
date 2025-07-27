@@ -7,10 +7,12 @@
   },
   "scripts": {
     "clean": "find src/ public/js/ -type f -and \\( -name '\\*.css' -name '\\*.js' -o -name '\\*.d.ts' -o -name '\\*.map' \\) -delete",
+    "find-images": "find . -type f \\( -iname \"*.jpg\" -o -iname \"*.jpeg\" -o -iname \"*.gif\" -o -iname \"*.webp\" -o -iname \"*.png\" \\)",
+    "build:avif": "yarn find-images | yarn node convertAvif.js",
     "build:sass": "yarn sass public/css:public/css",
-    "build:node": "yarn tsc -p tsconfig.node.json",
+    "build:node": "yarn tsc -p tsconfig.node.json && yarn build:avif",
     "build:browser": "yarn tsc -p tsconfig.browser.json",
-    "build": "yarn run clean && yarn run build:node && yarn run build:sass && yarn run build:browser",
+    "build": "yarn run clean && yarn concurrently \"yarn run build:node\" \"yarn run build:sass\" \"yarn run build:browser\"",
     "dev": "nodemon",
     "start": "node --env-file=.env src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -37,8 +39,10 @@
     "concurrently": "^9.2.0",
     "fastify": "^5.4.0",
     "nodemon": "^3.1.10",
+    "p-limit": "^6.2.0",
     "pino-pretty": "^13.0.0",
     "sass-embedded": "^1.89.2",
+    "sharp": "^0.34.3",
     "typescript": "^5.8.3"
   },
   "dependencies": {

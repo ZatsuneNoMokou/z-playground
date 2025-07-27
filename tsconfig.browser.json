@@ -8,6 +8,6 @@
 	"compilerOptions":{
 		"outDir": "public/js",
 		"module": "ESNext",
-		"target": "ES2023"
+		"target": "ES2024"
 	}
 }

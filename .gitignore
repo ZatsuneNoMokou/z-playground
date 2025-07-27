@@ -1,6 +1,9 @@
+/*.js
+/*.map
 /src/**/*.js
 /src/**/*.map
 /public/js/**/*.js
+/public/img/**/*.avif
 /public/css/**/*.css
 /public/**/*.map
 
