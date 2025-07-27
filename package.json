@@ -6,8 +6,8 @@
     "node": ">=22"
   },
   "scripts": {
-    "clean": "find src/ public/js/ -type f -and \\( -name '\\*.css' -name '\\*.js' -o -name '\\*.d.ts' -o -name '\\*.map' \\) -delete",
-    "find-images": "find . -type f \\( -iname \"*.jpg\" -o -iname \"*.jpeg\" -o -iname \"*.gif\" -o -iname \"*.webp\" -o -iname \"*.png\" \\)",
+    "clean": "find src/ public/ -type f -and \\( -name '\\*.avif' -o -name '\\*.css' -o -name '\\*.js' -o -name '\\*.d.ts' -o -name '\\*.map' \\) -delete",
+    "find-images": "find public -type f \\( -iname \"*.jpg\" -o -iname \"*.jpeg\" -o -iname \"*.gif\" -o -iname \"*.webp\" -o -iname \"*.png\" \\)",
     "build:avif": "yarn find-images | yarn node convertAvif.js",
     "build:sass": "yarn sass public/css:public/css",
     "build:node": "yarn tsc -p tsconfig.node.json && yarn build:avif",
